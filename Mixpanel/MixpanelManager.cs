@@ -118,14 +118,9 @@ namespace mixpanel
                 while (count < BatchSize)
                 {
                     byte[] data = session.Dequeue();
-                    if(data == null)
-                        break;
-                    var jsonString = Encoding.UTF8.GetString(data).Trim();
-                    if (string.IsNullOrEmpty(jsonString))
-                    {
-                        Debug.LogError($"[Mixpanel] empty json in queue");
-                        continue;
-                    }
+                    if (data == null) break;
+
+                    var jsonString = Encoding.UTF8.GetString(data);
                     try
                     {
                         batch.Add(JsonUtility.FromJson<Value>(jsonString));
@@ -176,7 +171,7 @@ namespace mixpanel
             _instance.DoFlush(MixpanelSettings.Instance.TrackUrl, Mixpanel.TrackQueue);
             _instance.DoFlush(MixpanelSettings.Instance.EngageUrl, Mixpanel.EngageQueue);
         }
-
+        
         #endregion
     }
 }
